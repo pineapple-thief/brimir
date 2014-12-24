@@ -36,9 +36,11 @@ ru:
 
 # tickets/index
   count_tickets:
+    zero: '%{count} заявок'
     one: '%{count} заявка'
     other: '%{count} заявок'
   count_tickets_containing:
+    zero: '%{count} заявок, содержат'
     one: '%{count} заявка, содержит'
     other: '%{count} заявок, содержат'
   priority: 'Приоритет'
@@ -56,6 +58,7 @@ ru:
   status: 'Статус'
   assignee: 'Ответственный'
   num_replies:
+    zero: '%{count} ответов'
     one: '%{count} ответ'
     other: '%{count} ответов'
   ago: 'назад'
