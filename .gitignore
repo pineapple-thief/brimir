@@ -36,3 +36,5 @@ coverage
 config/database.yml
 config/secrets.yml
 vendor/bundle
+public/assets/tinymce
+public/assets/
