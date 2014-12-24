@@ -41,16 +41,16 @@ class ApplicationController < ActionController::Base
       if user_signed_in? && !current_user.locale.blank?
         I18n.locale = current_user.locale
       else
-        locales = []
+        # locales = []
 
-        Dir.open('config/locales').each do |file|
-          unless ['.', '..'].include?(file)
-            # strip of .yml
-            locales << file[0...-4]
-          end
-        end
+        # Dir.open('config/locales').each do |file|
+        #   unless ['.', '..'].include?(file)
+        #     # strip of .yml
+        #     locales << file[0...-4]
+        #   end
+        # end
 
-        I18n.locale = http_accept_language.compatible_language_from(locales)
+        I18n.locale = I18n.default_locale
 
         if user_signed_in?
           current_user.locale = I18n.locale
