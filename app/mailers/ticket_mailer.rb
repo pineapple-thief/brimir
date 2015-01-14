@@ -106,6 +106,7 @@ class TicketMailer < ActionMailer::Base
       # add new ticket
       ticket = Ticket.create!({
         from: email.from.first,
+        to: email.to.first,
         subject: email.subject,
         content: content,
         message_id: email.message_id,
