@@ -102,16 +102,17 @@ class TicketMailer < ActionMailer::Base
       })
 
     else
-
-      # add new ticket
-      ticket = Ticket.create!({
-        from: email.from.first,
-        to: email.to.first,
-        subject: email.subject,
-        content: content,
-        message_id: email.message_id,
-        content_type: content_type,
-      })
+      if email.from.first != ActionMailer::Base.default[:from]
+        # add new ticket
+        ticket = Ticket.create!({
+          from: email.from.first,
+          to: email.to.first,
+          subject: email.subject,
+          content: content,
+          message_id: email.message_id,
+          content_type: content_type,
+        })
+      end
 
       incoming = ticket
 
