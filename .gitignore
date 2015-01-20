@@ -36,3 +36,6 @@ coverage
 
 # ignore rubymine
 .idea
+
+config/database.yml
+config/secrets.yml
