@@ -38,8 +38,8 @@ class RepliesController < ApplicationController
 
     authorize! :create, @reply
 
-    #begin
-      #Reply.transaction do
+    begin
+      Reply.transaction do
         @reply.save!
 
         # reopen ticket
@@ -53,17 +53,19 @@ class RepliesController < ApplicationController
         #   @reply.message_id = mail.message_id
         # end
 
-        reply_mail = NotificationMailer.send_reply(@reply, @reply.ticket, user)
-        Rails.logger.debug 'about to deliver mail'
+        reply_mail = NotificationMailer.send_reply(@reply, @reply.ticket, current_user)
         reply_mail.deliver
         @reply.message_id = reply_mail.message_id
 
         @reply.save!
         redirect_to @reply.ticket, notice: I18n::translate(:reply_added)
-      #end
-    #rescue
+      end
+    rescue => e
+      Rails.logger.error "Exception occured on Reply transaction!"
+      Rails.logger.error "message: #{e.message}"
+      Rails.logger.error "backtrace: #{e.backtrace.join("\n")}"
       render action: 'new'
-    #end
+    end
   end
 
   private
