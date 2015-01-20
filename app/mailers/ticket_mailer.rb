@@ -75,18 +75,20 @@ class TicketMailer < ActionMailer::Base
     end
 
     if response_to
-      # reopen ticket
-      ticket.status = :open
-      ticket.save
+      if email.from.first != ActionMailer::Base.default[:from]
+        # reopen ticket
+        ticket.status = :open
+        ticket.save
 
-      # add reply
-      incoming = Reply.create!({
-        content: content,
-        ticket_id: ticket.id,
-        from: email.from.first,
-        message_id: email.message_id,
-        content_type: content_type
-      })
+        # add reply
+        incoming = Reply.create!({
+          content: content,
+          ticket_id: ticket.id,
+          from: email.from.first,
+          message_id: email.message_id,
+          content_type: content_type
+        })
+      end
 
     else
       if email.from.first != ActionMailer::Base.default[:from]
