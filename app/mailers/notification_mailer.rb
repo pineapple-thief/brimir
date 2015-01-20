@@ -40,11 +40,19 @@ class NotificationMailer < ActionMailer::Base
 
   def send_reply(reply, user, ticket)
     @locale = Rails.configuration.i18n.default_locale
-    title = I18n::translate(:new_reply, locale: @locale) + ': ' + reply.ticket.subject
+    @reply = reply
+    
+    title = I18n::translate(:new_reply, locale: @locale) + ': ' + @reply.ticket.subject
 
-    add_attachments(reply)
-    add_reference_message_ids(reply)
-    add_in_reply_to_message_id(reply)
+    add_attachments(@reply)
+    add_reference_message_ids(@reply)
+    add_in_reply_to_message_id(@reply)
+
+    unless @reply.message_id.blank?
+      headers['Message-ID'] = @reply.message_id
+    end
+
+    Rails.logger.debug 'rendering mail'
 
     mail(to: ticket.from, subject: title, from: user.email)
   end

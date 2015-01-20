@@ -54,6 +54,7 @@ class RepliesController < ApplicationController
         # end
 
         reply_mail = NotificationMailer.send_reply(@reply, @reply.ticket, user)
+        Rails.logger.debug 'about to deliver mail'
         reply_mail.deliver
         @reply.message_id = reply_mail.message_id
 
