@@ -64,8 +64,7 @@ Brimir::Application.configure do
   config.active_support.deprecation = :notify
 
   config.action_mailer.default_url_options = { host: 'paperlinxsales.nl' }
-
-  ActionMailer::Base.default from: 'support@paperlinxsales.nl'
+  config.action_mailer.default_options = { from: 'support@paperlinxsales.nl' }
 
   config.eager_load = true
 end
