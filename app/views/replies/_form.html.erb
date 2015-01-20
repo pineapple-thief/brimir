@@ -35,7 +35,8 @@
       <%= t(:notification_will_be_sent_to) %>
     </p>
     <p>
-      <%= r.collection_check_boxes :notified_user_ids, @reply.users_to_notify, :id, :email %>
+      <%= @reply.ticket.from %>
+      <%#= r.collection_check_boxes :notified_user_ids, @reply.ticket.from, :id, :email %>
     </p>
 
     <p>
