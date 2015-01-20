@@ -1,5 +1,5 @@
 # Brimir is a helpdesk system to handle email support requests.
-# Copyright (C) 2012-2014 Ivaldi http://ivaldi.nl
+# Copyright (C) 2012-2015 Ivaldi http://ivaldi.nl
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -14,12 +14,27 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class Priority < ActiveRecord::Base
+class VerificationMailer < ActionMailer::Base
 
-	validates_presence_of :name
+  def verify(email_address)
+    headers['X-Brimir-Verification'] = email_address.verification_token
+    mail(to: email_address.email)
+  end
 
-  has_many :tickets
+  def receive(email)
+    to_verify = EmailAddress.where.not(verification_token: nil)
 
-  scope :default, -> { where(default: true) }
+    if to_verify.count > 0
+      to_verify.each do |email_address|
+        if email['X-Brimir-Verification'].to_s == email_address.verification_token
+          email_address.verification_token = nil
+          email_address.save!
 
+          return true
+        end
+      end
+    end
+
+    return false
+  end
 end

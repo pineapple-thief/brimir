@@ -1,5 +1,5 @@
 # Brimir is a helpdesk system to handle email support requests.
-# Copyright (C) 2012-2014 Ivaldi http://ivaldi.nl
+# Copyright (C) 2012-2015 Ivaldi http://ivaldi.nl
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -62,13 +62,13 @@ class TicketsController < ApplicationController
         if !@ticket.assignee.nil? && @ticket.assignee.id != current_user.id
 
           if @ticket.previous_changes.include? :assignee_id
-            TicketMailer.notify_assigned(@ticket).deliver
+            NotificationMailer.assigned(@ticket).deliver
 
           elsif @ticket.previous_changes.include? :status
-            TicketMailer.notify_status_changed(@ticket).deliver
+            NotificationMailer.status_changed(@ticket).deliver
 
           elsif @ticket.previous_changes.include? :priority
-            TicketMailer.notify_priority_changed(@ticket).deliver
+            NotificationMailer.priority_changed(@ticket).deliver
           end
 
         end
@@ -120,7 +120,7 @@ class TicketsController < ApplicationController
 
     if @ticket.save
 
-      Rule.apply_all(@ticket)
+      Rule.apply_all(@ticket) unless @ticket.is_a?(Reply)
 
       # where user notifications added?
       if @ticket.notified_users.count == 0
@@ -138,7 +138,7 @@ class TicketsController < ApplicationController
 
           @ticket.save
         else
-          TicketMailer.notify_assigned(@ticket).deliver
+          NotificationMailer.assigned(@ticket).deliver
         end
       end
     end
@@ -173,7 +173,6 @@ class TicketsController < ApplicationController
       if !current_user.nil? && current_user.agent?
         params.require(:ticket).permit(
             :from,
-            :to,
             :content,
             :subject,
             :status,
@@ -181,9 +180,8 @@ class TicketsController < ApplicationController
             :priority,
             :message_id)
       else
-        params.require(:ticket).permit(            
+        params.require(:ticket).permit(
             :from,
-            :to,
             :content,
             :subject,
             :priority)

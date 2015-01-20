@@ -51,7 +51,6 @@ Brimir::Application.configure do
   # Disable delivery errors, bad email addresses will be ignored
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :sendmail
-  config.action_mailer.perform_deliveries = true
 
   # Enable threaded mode
   # config.threadsafe!
@@ -62,9 +61,6 @@ Brimir::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
-
-  config.action_mailer.default_url_options = { host: 'paperlinxsales.nl' }
-  config.action_mailer.default_options = { from: 'support@paperlinxsales.nl' }
 
   config.eager_load = true
 end

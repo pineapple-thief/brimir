@@ -1,7 +1,7 @@
 en:
   language_name: english
 # layouts/application
-  new_ticket: New Ticket
+  new_ticket: New ticket
   inbox: Inbox
   mine: Mine
   waiting: Waiting
@@ -63,6 +63,7 @@ en:
   add: Add
   ticket_by_at: By %{email} on %{at}
   no_content: No content
+  ticket_id: Ticketnumber
   status: Status
   assignee: Assignee
   num_replies:
@@ -125,6 +126,9 @@ en:
 
 # users/edit
   edit_user: Edit User
+  omniauth_connect_title: Authentication using Google
+  omniauth_connect_text: Activate authentication using a Google Account. Afterwards you can use "Sign in with Google" as an alternative to the default email address and password login.
+  omniauth_connect_google_text: Connect with Google
 
 # users/index
   email: Email
@@ -156,6 +160,16 @@ en:
 # controllers/replies
   reply_added: Reply added
 
+# controllers/omniauth
+  already_linked_accounts: Already linked with Google Account
+  successfully_linked_account: Successfully linked with Google Account
+  not_linked_account_cant_login: There is no user attached to this provider yet. Please sign in first and connect through the personal settings screen.
+  third_party_failure: An error occured during authentication. Did you enable "Contacts API" and "Google+ API" via the Google API console?
+
+# user/sign_in (omniauth)
+  omniauth_sign_in_title: Alternative sign in
+  omniauth_sign_in_google: Google
+
 # rules/index
   new_rule: New rule
 
@@ -169,6 +183,16 @@ en:
   rule_modified: Rule modified
   rule_deleted: Rule deleted
 
+# email_addresses/index
+  new_email_address: New outgoing email address
+  email_addresses: Email addresses for outgoing email
+
+# email_addresses/new
+  verification_mail_will_be_sent: Make sure this email address is forwarded correctly to Brimir. An automated verification email will be sent when you click save. Only verified email addresses can be used for outgoing mail.
+  mark_spam_spf: Brimir mails might be marked as spam when you don't add this server to the SPF DNS record of the above mail address.
+
+# controllers/email_addresses
+  email_address_added: Email address added
 
   activerecord:
     attributes:
@@ -185,7 +209,6 @@ en:
 
       ticket:
         from: From email address
-        to: To email address
         subject: Subject
         content: Content
         status: Status
@@ -206,3 +229,8 @@ en:
           change_priority: change priority to
           assign_user: assign to
         action_value: Parameter for action
+
+      email_address:
+        email: Email address
+        default: Use as default outgoing mail address
+        verification_token: Verified

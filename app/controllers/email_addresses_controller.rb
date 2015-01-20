@@ -14,8 +14,36 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# tracks which user was notified for a notifiable object
-class Notification < ActiveRecord::Base
-  belongs_to :notifiable, polymorphic: true
-  belongs_to :user
+class EmailAddressesController < ApplicationController
+
+  load_and_authorize_resource :email_address
+
+  def index
+    @email_address = EmailAddress.ordered.page(params[:page])
+  end
+
+  def new
+  end
+
+  def create
+    @email_address.assign_attributes(email_address_params)
+
+    if @email_address.save
+      VerificationMailer.verify(@email_address)
+          .deliver
+
+      redirect_to email_addresses_url, notice: I18n.t(:email_address_added)
+    else
+      render 'new'
+    end
+  end
+
+  protected
+    def email_address_params
+      params.require(:email_address).permit(
+          :email,
+          :default
+      )
+    end
+
 end

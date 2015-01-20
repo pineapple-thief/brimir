@@ -16,13 +16,12 @@
 
 require 'test_helper'
 
-class RulesControllerTest < ActionController::TestCase
+class EmailAddressesControllerTest < ActionController::TestCase
 
   setup do
     @alice = users(:alice)
     @bob = users(:bob)
-
-    @rule = rules(:assign_when_ivaldi)
+    @email_address = email_addresses(:support)
   end
 
   test 'should get index' do
@@ -39,23 +38,6 @@ class RulesControllerTest < ActionController::TestCase
     assert_response :unauthorized
   end
 
-  test 'should get edit' do
-    sign_in @alice
-
-    get :edit, id: @rule
-    assert_response :success
-  end
-
-  test 'should update' do
-    sign_in @alice
-
-    put :update, id: @rule, rule: {
-        filter_field: 'subject',
-    }
-    assert_equal 'subject', assigns(:rule).filter_field
-    assert_redirected_to rules_url
-  end
-
   test 'should get new' do
     sign_in @alice
 
@@ -66,28 +48,16 @@ class RulesControllerTest < ActionController::TestCase
   test 'should create' do
     sign_in @alice
 
-    assert_difference 'Rule.count' do
-      post :create, rule: {
-        filter_field: @rule.filter_field,
-        filter_operation: @rule.filter_operation,
-        filter_value: @rule.filter_value,
-        action_operation: @rule.action_operation,
-        action_value: @rule.action_value,
-      }
-
-      assert_redirected_to rules_url
-    end
-  end
-
-  test 'should remove rule' do
-    sign_in @alice
-
-    assert_difference 'Rule.count', -1 do
-      delete :destroy, id: @rule
-
-      assert_redirected_to rules_url
+    assert_difference 'ActionMailer::Base.deliveries.size' do
+      assert_no_difference 'EmailAddress.where(default: true).count' do
+        assert_difference 'EmailAddress.count' do
+          post :create, email_address: { email: 'support@support.bla', default: '1' }
+        end
+      end
     end
 
+    assert_redirected_to email_addresses_url
+    assert_equal assigns(:email_address).verification_token,
+        ActionMailer::Base.deliveries.last['X-Brimir-Verification'].to_s
   end
-
 end

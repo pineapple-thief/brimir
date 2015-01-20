@@ -1,5 +1,5 @@
 # Brimir is a helpdesk system to handle email support requests.
-# Copyright (C) 2012-2014 Ivaldi http://ivaldi.nl
+# Copyright (C) 2012-2015 Ivaldi http://ivaldi.nl
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -16,30 +16,6 @@
 
 class TicketMailer < ActionMailer::Base
 
-  def notify_status_changed(ticket)
-    @ticket = ticket
-
-    mail(to: ticket.assignee.email, subject:
-        'Ticket status modified in ' + ticket.status + ' for: ' \
-        + ticket.subject)
-  end
-
-  def notify_priority_changed(ticket)
-    @ticket = ticket
-
-    mail(to: ticket.assignee.email, subject:
-        'Ticket priority modified in ' + ticket.priority + ' for: ' \
-        + ticket.subject)
-  end
-
-  def notify_assigned(ticket)
-    @ticket = ticket
-
-    mail(to: ticket.assignee.email, subject:
-        'Ticket assigned to you: ' + ticket.subject)
-  end
-
-
   def normalize_body(part, charset)
     part.body.decoded.force_encoding(charset).encode('UTF-8')
   end
@@ -48,6 +24,11 @@ class TicketMailer < ActionMailer::Base
     require 'mail'
 
     email = Mail.new(message)
+
+    # is this an address verification mail?
+    if VerificationMailer.receive(email)
+      return
+    end
 
     content = ''
 
@@ -66,6 +47,12 @@ class TicketMailer < ActionMailer::Base
         content = email.body.decoded.encode('UTF-8')
       end
       content_type = 'text'
+    end
+
+    if email.charset
+      subject = email.subject.to_s.force_encoding(email.charset).encode('UTF-8')
+    else
+      subject = email.subject.to_s.encode('UTF-8')
     end
 
 
@@ -102,17 +89,15 @@ class TicketMailer < ActionMailer::Base
       })
 
     else
-      if email.from.first != ActionMailer::Base.default[:from]
-        # add new ticket
-        ticket = Ticket.create!({
-          from: email.from.first,
-          to: email.to.first,
-          subject: email.subject,
-          content: content,
-          message_id: email.message_id,
-          content_type: content_type,
-        })
-      end
+
+      # add new ticket
+      ticket = Ticket.create!({
+        from: email.from.first,
+        subject: subject,
+        content: content,
+        message_id: email.message_id,
+        content_type: content_type,
+      })
 
       incoming = ticket
 

@@ -29,12 +29,10 @@ data
 config/deploy
 config/deploy.rb
 Capfile
+.capistrano
 
 # rcov files
 coverage
 
-config/database.yml
-config/secrets.yml
-vendor/bundle
-public/assets/tinymce
-public/assets/
+# ignore rubymine
+.idea
