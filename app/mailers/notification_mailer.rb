@@ -38,7 +38,7 @@ class NotificationMailer < ActionMailer::Base
     mail(to: user.email, subject: title, from: EmailAddress.default_email)
   end
 
-  def send_reply(reply, user, ticket)
+  def send_reply(reply, ticket, user)
     @locale = Rails.configuration.i18n.default_locale
     @reply = reply
     
