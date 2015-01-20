@@ -38,8 +38,8 @@ class RepliesController < ApplicationController
 
     authorize! :create, @reply
 
-    begin
-      Reply.transaction do
+    #begin
+      #Reply.transaction do
         @reply.save!
 
         # reopen ticket
@@ -60,10 +60,10 @@ class RepliesController < ApplicationController
 
         @reply.save!
         redirect_to @reply.ticket, notice: I18n::translate(:reply_added)
-      end
-    rescue
+      #end
+    #rescue
       render action: 'new'
-    end
+    #end
   end
 
   private
