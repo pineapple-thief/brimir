@@ -124,7 +124,7 @@ class TicketsController < ApplicationController
 
       # where user notifications added?
       if @ticket.notified_users.count == 0
-        #@ticket.set_default_notifications!
+        @ticket.set_default_notifications!
       end
 
       # @ticket might be a Reply when via json post

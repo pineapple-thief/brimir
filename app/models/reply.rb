@@ -36,7 +36,7 @@ class Reply < ActiveRecord::Base
   }
 
   def set_default_notifications!
-    self.notified_user_ids = users_to_notify.map(&:id)
+    #self.notified_user_ids = users_to_notify.map(&:id)
   end
 
   def other_replies

@@ -38,6 +38,17 @@ class NotificationMailer < ActionMailer::Base
     mail(to: user.email, subject: title, from: EmailAddress.default_email)
   end
 
+  def send_reply(reply, user, ticket)
+    @locale = Rails.configuration.i18n.default_locale
+    title = I18n::translate(:new_reply, locale: @locale) + ': ' + reply.ticket.subject
+
+    add_attachments(reply)
+    add_reference_message_ids(reply)
+    add_in_reply_to_message_id(reply)
+
+    mail(to: ticket.from, subject: title, from: user.email)
+  end
+
   def new_reply(reply, user)
     unless user.locale.blank?
       @locale = user.locale

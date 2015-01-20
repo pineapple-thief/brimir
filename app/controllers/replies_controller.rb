@@ -50,6 +50,9 @@ class RepliesController < ApplicationController
           mail = NotificationMailer.new_reply(@reply, user)
 
           mail.deliver
+
+          reply_mail = NotificationMailer.send_reply(@reply, @reply.ticket, user)
+          reply_mail.deliver
           @reply.message_id = mail.message_id
         end
 
