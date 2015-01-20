@@ -195,6 +195,7 @@ nl:
 
       ticket:
         from: Van e-mailadres
+        to: Naar e-mailadres
         subject: Onderwerp
         content: Inhoud
         status: Status

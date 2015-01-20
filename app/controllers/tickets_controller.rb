@@ -173,6 +173,7 @@ class TicketsController < ApplicationController
       if !current_user.nil? && current_user.agent?
         params.require(:ticket).permit(
             :from,
+            :to,
             :content,
             :subject,
             :status,
@@ -182,6 +183,7 @@ class TicketsController < ApplicationController
       else
         params.require(:ticket).permit(
             :from,
+            :to,
             :content,
             :subject,
             :priority)

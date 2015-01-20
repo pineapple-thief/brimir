@@ -50,7 +50,8 @@ class ApplicationController < ActionController::Base
           end
         end
 
-        I18n.locale = http_accept_language.compatible_language_from(locales)
+        #I18n.locale = http_accept_language.compatible_language_from(locales)
+        I18n.locale = I18n.default_locale
 
         if user_signed_in?
           current_user.locale = I18n.locale

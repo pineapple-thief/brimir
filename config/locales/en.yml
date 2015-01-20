@@ -209,6 +209,7 @@ en:
 
       ticket:
         from: From email address
+        to: To email address
         subject: Subject
         content: Content
         status: Status
